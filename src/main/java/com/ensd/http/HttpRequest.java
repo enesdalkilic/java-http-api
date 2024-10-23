@@ -1,11 +1,14 @@
 package com.ensd.http;
 
+import java.util.Map;
+
 public class HttpRequest {
     private String method;
     private String requestTarget;
     private String path;
     private String httpVersion;
-
+    private Map<String, String> headers;
+    private String name;
 
     public String getPath() {
         return path;
@@ -31,12 +34,17 @@ public class HttpRequest {
         this.method = method;
     }
 
-    public String getRequestTarget() {
-        return requestTarget;
+    public String getHeader(String name) {
+        return headers.get(name);
     }
 
-    public void setRequestTarget(String requestTarget) {
-        this.requestTarget = requestTarget;
+    public Map<String, String> getHeaders() {
+        return headers;
     }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
 
 }

@@ -1,8 +1,13 @@
 package com.ensd.core;
 
+import com.ensd.Router;
+import com.ensd.handlers.RequestHandler;
+import com.ensd.handlers.ResponseHandler;
 import com.ensd.http.HttpParser;
 import com.ensd.http.HttpRequest;
 
+import com.ensd.http.HttpResponse;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,13 +15,19 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+import java.util.Map;
+
 public class HttpConnectionWorkerThread extends Thread {
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpConnectionWorkerThread.class);
     private final Socket socket;
     private volatile boolean running = true; // Shutdown flag
+    private Router router = null;
 
-    public HttpConnectionWorkerThread(Socket socket) {
+    public HttpConnectionWorkerThread(Socket socket, Router router) {
         this.socket = socket;
+        this.router = router;
+
+
         //   this.workerId = ++threadCounter;
     }
 
@@ -31,21 +42,13 @@ public class HttpConnectionWorkerThread extends Thread {
 
             LOGGER.info("Received request from {} {}", socket.getInetAddress(), Thread.currentThread().getId());
 
-            String jsonResponse = "{\"method\": \"" + request.getMethod() + "\"," +
-                    "\"version\": \"" + request.getHttpVersion() + "\"," +
-                    "\"path\": \"" + request.getPath() + "\"," +
-                    "}";
-            String CRLF = "\r\n"; // 13, 10
-            String response = "HTTP/1.1 200 OK" + CRLF + // Status line
-                    "Content-Length: " + jsonResponse.getBytes(StandardCharsets.US_ASCII).length + CRLF + // Content length
-                    "Content-Type: application/json" + CRLF + // Content type for JSON
-                    CRLF + // End of headers
-                    jsonResponse + CRLF; // Body
+            String path = request.getPath();
 
-            // Send response to the client
-            outputStream.write(response.getBytes(StandardCharsets.US_ASCII));
-            outputStream.flush(); // Ensure response is sent
-//            shutdown();
+            HttpResponse response = new HttpResponse(outputStream, socket.getInputStream(), socket);
+
+            router.newRequest(path, request, response);
+
+
         } catch (IOException e) {
             System.err.println("Error handling client request: " + e.getMessage());
         } finally {

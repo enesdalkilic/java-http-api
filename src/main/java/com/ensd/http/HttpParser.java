@@ -7,6 +7,8 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpParser {
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpParser.class);
@@ -37,8 +39,16 @@ public class HttpParser {
             httpRequest.setMethod(requestLineParts[0]);
             httpRequest.setPath(requestLineParts[1]);
             httpRequest.setHttpVersion(requestLineParts[2]);
+            Map<String, String> headers = new HashMap<>();
+            String headerLine;
+            while (!(headerLine = reader.readLine()).isEmpty()) {
+                String[] headerParts = headerLine.split(":\\s*", 2);
+                if (headerParts.length == 2) {
+                    headers.put(headerParts[0], headerParts[1]);
+                }
+            }
+            httpRequest.setHeaders(headers);
 
-            throw new IOException("message");
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }

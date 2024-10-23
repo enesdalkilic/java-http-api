@@ -1,7 +1,7 @@
 package com.ensd.http;
 
 public enum HttpMethod {
-    GET, HEAD;
+    GET, POST,HEAD;
 
     public static final int MAX_LENGTH;
 
