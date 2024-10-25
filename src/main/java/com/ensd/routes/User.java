@@ -11,6 +11,6 @@ public class User implements RequestHandler {
         JSONObject obj = new JSONObject();
         obj.put("testing", "1");
 
-        response.sendJson(obj);
+        response.sendJson(200, obj);
     }
 }

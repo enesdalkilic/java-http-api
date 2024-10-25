@@ -1,17 +1,21 @@
 package com.ensd;
 
+//CORE
+
 import com.ensd.core.ServerListener;
 
+//Dependencies
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//Exceptions
 import java.io.*;
 
 public class HttpServer {
     private final static int PORT = 8080;
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpServer.class);
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         try {
             ServerListener serverListener = new ServerListener(8080);
             LOGGER.info("Server running on PORT: " + PORT);
@@ -20,6 +24,4 @@ public class HttpServer {
             throw new RuntimeException(e);
         }
     }
-
-
 }

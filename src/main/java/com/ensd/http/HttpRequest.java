@@ -4,11 +4,27 @@ import java.util.Map;
 
 public class HttpRequest {
     private String method;
-    private String requestTarget;
     private String path;
     private String httpVersion;
     private Map<String, String> headers;
-    private String name;
+    private String originalHttpRequest;
+    private String body;
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getOriginalHttpRequest() {
+        return originalHttpRequest;
+    }
+
+    public void setOriginalHttpRequest(String originalHttpRequest) {
+        this.originalHttpRequest = originalHttpRequest;
+    }
 
     public String getPath() {
         return path;

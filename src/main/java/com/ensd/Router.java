@@ -1,18 +1,28 @@
 package com.ensd;
 
-import com.ensd.handlers.RequestHandler;
+// IMPORTING ROUTES
+import com.ensd.routes.GET.GetUser;
+import com.ensd.routes.POST.*;
+import com.ensd.routes.User;
 
-//Route Handlers
+//Request Handlers
 import com.ensd.http.HttpRequest;
 import com.ensd.http.HttpResponse;
-import com.ensd.routes.User;
+
+import com.ensd.handlers.RequestHandler;
+
+//Dependencies
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.OutputStream;
+//UTILS
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+//Exceptions
+import java.io.IOException;
+import java.io.OutputStream;
+
 
 public class Router {
     private final Map<String, RequestHandler> routes = new HashMap<>();
@@ -25,7 +35,9 @@ public class Router {
         // ROUTES
         // *//
 
-        putRoute("/user", new User());
+
+        putRoute("/new-user", new NewUser());
+        putRoute("/get-user", new GetUser());
     }
 
     public void newRequest(String path, HttpRequest request, HttpResponse response) {

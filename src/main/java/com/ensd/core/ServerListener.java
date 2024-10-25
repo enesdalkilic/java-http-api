@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class ServerListener {
 
     public ServerListener(int port) throws IOException {
         serverSocket = new ServerSocket(port);
-
     }
 
     public void run() throws IOException {
@@ -44,7 +44,7 @@ public class ServerListener {
     }
 
     private void shutdownWorkers() {
-        System.out.println("Workers shut down");
+
         for (HttpConnectionWorkerThread worker : activeThreads) {
             worker.shutdown(); // Call shutdown on each active worker
         }

@@ -1,13 +1,10 @@
 package com.ensd.core;
 
 import com.ensd.Router;
-import com.ensd.handlers.RequestHandler;
-import com.ensd.handlers.ResponseHandler;
 import com.ensd.http.HttpParser;
 import com.ensd.http.HttpRequest;
-
 import com.ensd.http.HttpResponse;
-import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,50 +12,50 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-import java.util.Map;
-
 public class HttpConnectionWorkerThread extends Thread {
     private final static Logger LOGGER = LoggerFactory.getLogger(HttpConnectionWorkerThread.class);
     private final Socket socket;
     private volatile boolean running = true; // Shutdown flag
     private Router router = null;
+    private static final int SP = 0x20; // 32
+    private static final int CR = 0x0D; // 13
+    private static final int LF = 0x0A; // 10
 
     public HttpConnectionWorkerThread(Socket socket, Router router) {
         this.socket = socket;
         this.router = router;
-
-
-        //   this.workerId = ++threadCounter;
     }
 
     @Override
     public void run() {
         OutputStream outputStream = null;
         try {
+            LOGGER.info("Received request from {} {}", socket.getInetAddress(), Thread.currentThread().getId());
             outputStream = socket.getOutputStream();
 
-            HttpParser httpParser = new HttpParser(socket);
-            HttpRequest request = httpParser.parseRequest();
+            HttpParser httpParser = new HttpParser();
 
-            LOGGER.info("Received request from {} {}", socket.getInetAddress(), Thread.currentThread().getId());
-
-            String path = request.getPath();
-
-            HttpResponse response = new HttpResponse(outputStream, socket.getInputStream(), socket);
-
-            router.newRequest(path, request, response);
+            HttpRequest request = httpParser.parseRequest(socket.getInputStream());
+            if (request != null) {
+                String path = request.getPath();
+                HttpResponse response = new HttpResponse(outputStream, socket.getInputStream(), socket);
+                router.newRequest(path, request, response);
+            } else {
+                socket.close();
+            }
 
 
         } catch (IOException e) {
-            System.err.println("Error handling client request: " + e.getMessage());
+            LOGGER.error("Error handling client request: {}", e.getMessage());
         } finally {
             try {
                 socket.close(); // Ensure the socket is closed after handling the request
             } catch (IOException e) {
-                System.err.println("Error closing socket: " + e.getMessage());
+                LOGGER.error("Error closing socket: {}", e.getMessage());
             }
         }
     }
+
 
     // Method to shut down the thread
     public void shutdown() {
