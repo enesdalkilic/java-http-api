@@ -5,6 +5,7 @@ package com.ensd;
 import com.ensd.core.ServerListener;
 
 //Dependencies
+import com.ensd.database.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,8 @@ public class HttpServer {
         try {
             ServerListener serverListener = new ServerListener(8080);
             LOGGER.info("Server running on PORT: " + PORT);
+
+            Database.connect();
             serverListener.run();
         } catch (IOException e) {
             throw new RuntimeException(e);

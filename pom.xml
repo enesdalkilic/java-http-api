@@ -15,6 +15,22 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>2.0.12</version>
+        </dependency>
         <!--   JSON  -->
         <dependency>
             <groupId>org.json</groupId>
@@ -39,19 +55,20 @@
 
         <!--   DATABASE     -->
 
-        <!-- https://mvnrepository.com/artifact/org.mongodb/bson -->
+<!--         https://mvnrepository.com/artifact/org.mongodb/bson -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>bson</artifactId>
-            <version>5.2.0</version>
+            <version>4.3.4</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.14</version>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.3.4</version>
         </dependency>
+
 
     </dependencies>
 </project>

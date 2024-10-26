@@ -1,9 +1,9 @@
 package com.ensd;
 
 // IMPORTING ROUTES
+
 import com.ensd.routes.GET.GetUser;
 import com.ensd.routes.POST.*;
-import com.ensd.routes.User;
 
 //Request Handlers
 import com.ensd.http.HttpRequest;
@@ -26,6 +26,7 @@ import java.io.OutputStream;
 
 public class Router {
     private final Map<String, RequestHandler> routes = new HashMap<>();
+
     private final OutputStream outputStream;
 
     public Router(OutputStream outputStream) {
@@ -35,7 +36,6 @@ public class Router {
         // ROUTES
         // *//
 
-
         putRoute("/new-user", new NewUser());
         putRoute("/get-user", new GetUser());
     }
@@ -43,10 +43,14 @@ public class Router {
     public void newRequest(String path, HttpRequest request, HttpResponse response) {
         RequestHandler HANDLER = routes.get(path);
 
-        if (HANDLER != null) {
+        String method = request.getMethod();
+        HANDLER.getMethod();
+        if (HANDLER.getMethod().equals(method)) {
             HANDLER.handle(request, response);
+        }else if(!HANDLER.getMethod().equals(method)){
+            response.send(405, "Method Not Allowed");
         } else {
-            notFound();
+            response.send(404, "Not Found");
         }
     }
 
