@@ -29,6 +29,12 @@ public class HttpResponse {
         sendResponse(outputStream, statusCode, headers, res);
     }
 
+    public void sendStatus(int statusCode) {
+        HttpStatusCode code = HttpStatusCode.getStatusFromCode(statusCode);
+        System.out.println(code);
+        sendResponse(outputStream, code.STATUS_CODE, headers, code.MESSAGE);
+    }
+
     public void sendJson(int statusCode, JSONObject res) {
         headers.put("Content-Type", " application/json");
         sendResponse(outputStream, statusCode, headers, res.toString());
