@@ -13,7 +13,6 @@ import ch.qos.logback.classic.Level;
 
 public class Database {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Database.class);
-    private static MongoClient mongoClient;
     private static MongoDatabase database;
 
     private static final String uri = "mongodb://localhost:27017/";
@@ -21,8 +20,14 @@ public class Database {
     public static void connect() {
         turnOffLogging();
         LOGGER.info("Connecting to database:: {}", uri);
+
         // Replace the placeholder with your MongoDB deployment's connection string
-        mongoClient = MongoClients.create(uri);
+        MongoClient mongoClient = null;
+        try {
+            mongoClient = MongoClients.create(uri);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         database = mongoClient.getDatabase("local");
         LOGGER.info("Database connected:: {}", uri);
     }
@@ -31,6 +36,7 @@ public class Database {
         return database.getCollection(name);
     }
 
+    //To turn off mongodb's default logger
     private static void turnOffLogging() {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         Logger rootLogger = loggerContext.getLogger("org.mongodb.driver");

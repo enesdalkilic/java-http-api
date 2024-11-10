@@ -1,5 +1,7 @@
 package com.ensd.http;
 
+import org.json.JSONObject;
+
 import java.util.Map;
 
 public class HttpRequest {
@@ -10,8 +12,8 @@ public class HttpRequest {
     private String originalHttpRequest;
     private String body;
 
-    public String getBody() {
-        return body;
+    public JSONObject getBody() {
+        return new JSONObject(body);
     }
 
     public void setBody(String body) {

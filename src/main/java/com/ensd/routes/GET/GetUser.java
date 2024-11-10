@@ -16,7 +16,7 @@ public class GetUser implements RequestHandler {
     public void handle(HttpRequest request, HttpResponse response) {
         JSONObject obj = new JSONObject();
         obj.put("testing", "1");
-        Collection collection = new Collection(Database.getCollection("movies"));
+        Collection collection = new Collection("users");
         JSONObject doc = collection.findOne("name", "sherlock");
         response.sendJson(200, doc);
     }

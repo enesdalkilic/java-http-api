@@ -72,7 +72,7 @@ public class HttpResponse {
             outputStream.write(response.toString().getBytes());
             outputStream.flush();
         } catch (Exception e) {
-            LOGGER.error("");
+            LOGGER.error(String.valueOf(e));
         }
     }
 

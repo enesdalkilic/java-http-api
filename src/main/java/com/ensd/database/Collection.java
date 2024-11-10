@@ -11,8 +11,9 @@ public class Collection {
     private final MongoCollection<Document> collection;
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Collection.class);
 
-    public Collection(MongoCollection<Document> collection) {
-        this.collection = collection;
+    public Collection(String collectionName) {
+        collection = Database.getCollection(collectionName);
+
 
     }
 
@@ -22,10 +23,9 @@ public class Collection {
         return conversation(doc);
     }
 
-    public void insertOne(JSONObject obj) {
+    public void insertOne(Document obj) {
 
-       Document _doc = Document.parse(obj.toString());
-        collection.insertOne(_doc);
+        collection.insertOne(obj);
     }
 
     public JSONObject conversation(Document _doc) {
