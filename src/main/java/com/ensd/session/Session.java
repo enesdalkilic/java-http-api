@@ -58,6 +58,7 @@ public class Session {
         session.put("session_id", sessionID);
         session.put("user_id", userID);
         session.put("expire_date", expireDate);
+        session.put("expire_in_ms", expireInMs);
         return session;
     }
 

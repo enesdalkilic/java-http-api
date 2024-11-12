@@ -31,7 +31,6 @@ public class HttpResponse {
 
     public void sendStatus(int statusCode) {
         HttpStatusCode code = HttpStatusCode.getStatusFromCode(statusCode);
-        System.out.println(code);
         sendResponse(outputStream, code.STATUS_CODE, headers, code.MESSAGE);
     }
 

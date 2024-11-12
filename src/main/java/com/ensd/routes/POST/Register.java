@@ -17,11 +17,16 @@ import com.ensd.utils.SHA256;
 import com.ensd.utils.SnowflakeID;
 import org.json.JSONObject;
 
-public class NewUser implements RequestHandler {
+public class Register implements RequestHandler {
 
     @Override
     public String getMethod() {
         return "POST";
+    }
+
+    @Override
+    public Boolean protectedPath() {
+        return false;
     }
 
     @Override
@@ -41,6 +46,7 @@ public class NewUser implements RequestHandler {
             response.sendStatus(400);
         }
 
+        Session session;
         try {
             usrModel.validate();
         } catch (ModelValidateException e) {
@@ -48,10 +54,11 @@ public class NewUser implements RequestHandler {
             return;
         } finally {
             usrModel.save();
-            Session session = SessionManager.putSession(user_id, response);
+            session = SessionManager.putSession(user_id, response);
             response.setCookie("_sid", session.getSessionToken(), session.getExpireInMs());
         }
-
-        response.sendStatus(200);
+        JSONObject jsonRes = new JSONObject();
+        jsonRes.put("_sid", session.getSessionToken());
+        response.sendJson(200, jsonRes);
     }
 }

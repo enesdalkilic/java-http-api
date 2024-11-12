@@ -6,6 +6,7 @@ import com.ensd.core.ServerListener;
 
 //Dependencies
 import com.ensd.database.Database;
+import com.ensd.session.SessionManager;
 import com.ensd.utils.SnowflakeID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,10 @@ public class HttpServer {
             LOGGER.info("Server running on PORT: " + PORT);
 
             SnowflakeID.setup(1728835510, 1, 5);
-
             Database.connect();
+
+
+            SessionManager.fetchSessions();
             serverListener.run();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -1,5 +1,8 @@
 package com.ensd.http;
 
+import com.ensd.session.Session;
+import com.ensd.session.SessionManager;
+import com.ensd.utils.JWTUtil;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -11,6 +14,16 @@ public class HttpRequest {
     private Map<String, String> headers;
     private String originalHttpRequest;
     private String body;
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    private Session session = null;
 
     public JSONObject getBody() {
         return new JSONObject(body);
@@ -64,5 +77,29 @@ public class HttpRequest {
         this.headers = headers;
     }
 
+    public boolean verifyAndSetSession() {
+        String token = getHeader("Authorization");
+        String sid = null;
+
+        try {
+            JSONObject decoded = JWTUtil.decode(token);
+            assert decoded != null;
+            if (decoded.get("session_id") != null) {
+                sid = (String) decoded.get("session_id");
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        Session session = SessionManager.getSession(sid);
+
+        if (session == null) {
+            return false;
+        } else {
+            setSession(session);
+        }
+
+        return session.getIsValid();
+    }
 
 }

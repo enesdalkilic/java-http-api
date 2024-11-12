@@ -1,6 +1,8 @@
 package com.ensd.database;
 
+import com.mongodb.lang.Nullable;
 import org.bson.Document;
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -89,7 +91,11 @@ public class Model {
         return null;
     }
 
-    public void getCollection() {
-        //Probably unnecessary
+    public JSONObject findOne(String query, String value) {
+        return _collection.findOne(query, value);
+    }
+
+    public List<JSONObject> findAll() {
+        return _collection.findAll();
     }
 }

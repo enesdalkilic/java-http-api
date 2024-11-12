@@ -29,6 +29,51 @@ public class JWTUtil {
         return encodedHeader + "." + encodedPayload + "." + signature;
     }
 
+    public static JSONObject decode(String jwt) {
+        // Step 1: Split the JWT into its components
+        String[] parts = jwt.split("\\.");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid JWT format");
+        }
+
+        String encodedHeader = parts[0];
+        String encodedPayload = parts[1];
+        String signature = parts[2];
+
+        // Step 2: Decode Header and Payload
+        String header = new String(Base64.getUrlDecoder().decode(encodedHeader), StandardCharsets.UTF_8);
+        String payload = new String(Base64.getUrlDecoder().decode(encodedPayload), StandardCharsets.UTF_8);
+
+//        System.out.println("Decoded Header: " + header);
+//        System.out.println("Decoded Payload: " + payload);
+
+        JSONObject payloadObject;
+        try {
+            payloadObject = new JSONObject(payload);
+//            Object expireDateInMs = payloadObject.get("expireDate");
+//            try {
+//                Long.parseLong((String) expireDateInMs);
+//            } catch (NumberFormatException e) {
+//                throw new RuntimeException(e);
+//            }
+//            long currentEpoch = new Date().getTime();
+//            Date until = new Date(currentEpoch + Long.parseLong("100000000")); //(String) expireDateInMs)
+
+        } catch (JSONException e) {
+            return null;
+        }
+        try {
+            String expectedSignature = createHmacSignature(encodedHeader + "." + encodedPayload, SECRET_KEY);
+            if (!expectedSignature.equals(signature)) {
+                throw new Exception("");
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        // Step 3: Verify the Signature
+        return payloadObject;
+    }
+
     // Decodes and verifies a JWT
     public static boolean verifyJWT(String jwt) throws Exception {
         // Step 1: Split the JWT into its components
@@ -57,7 +102,6 @@ public class JWTUtil {
             }
             long currentEpoch = new Date().getTime();
             Date until = new Date(currentEpoch + Long.parseLong("100000000")); //(String) expireDateInMs)
-            System.out.println("until " + until);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

@@ -8,5 +8,7 @@ public class SessionModel extends Model {
         set_collection("sessions");
         registerField("_sid", FieldType.STRING);
         registerField("user_id", FieldType.STRING);
+        registerField("expire_date", FieldType.STRING);
+        registerField("expire_in_ms", FieldType.STRING);
     }
 }

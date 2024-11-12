@@ -36,7 +36,9 @@ public class Router {
         // ROUTES
         // *//
 
-        putRoute("/new-user", new NewUser());
+        putRoute("/register", new Register());
+        putRoute("/login", new Login());
+
         putRoute("/get-user", new GetUser());
     }
 
@@ -46,8 +48,12 @@ public class Router {
         String method = request.getMethod();
         HANDLER.getMethod();
         if (HANDLER.getMethod().equals(method)) {
+            boolean isAuthorized = request.verifyAndSetSession();
+            if (HANDLER.protectedPath() && !isAuthorized) {
+                response.send(403, "Forbidden");
+            }
             HANDLER.handle(request, response);
-        }else if(!HANDLER.getMethod().equals(method)){
+        } else if (!HANDLER.getMethod().equals(method)) {
             response.send(405, "Method Not Allowed");
         } else {
             response.send(404, "Not Found");
@@ -59,11 +65,11 @@ public class Router {
     }
 
     private void notFound() {
-        // Debug: System.out.println("Route not found");
+
         JSONObject notFoundJson = new JSONObject();
         notFoundJson.put("status", 404);
         notFoundJson.put("message", "Not Found");
-        // notFoundJson.put("path", request.getPath());
+
         String CRLF = "\r\n";
 
         String notFoundRes = "HTTP/1.1 404 Not Found" + CRLF + // Status line
